@@ -1,0 +1,11 @@
+10
+E->create table TF
+F->(G)
+G->G,G
+G->id
+T->id
+E->insert into T values F
+E->select G from T H;
+H->where G
+G->G=id
+H->~
