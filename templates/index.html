@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Compile</title>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-image: url('/static/images/Image1.jpg');
+        }
+
+        .goto {
+            background-color: antiquewhite;
+            opacity: 0.6;
+        }
+
+        .state {
+            background-color: aliceblue;
+            opacity: 0.6;
+        }
+
+        .action {
+            background-color: aqua;
+            opacity: 0.6;
+        }
+
+        /*.s_ipt_wr {*/
+        /*    position: fixed;*/
+        /*    width: 546px;*/
+        /*    height: 40px;*/
+        /*    bottom: 5%;*/
+        /*    left: 30%;*/
+        /*}*/
+
+        /*.s_b {*/
+        /*    position: fixed;*/
+        /*    bottom: 5%;*/
+        /*    width: 80px;*/
+        /*    height: 46px;*/
+        /*    left: 63%;*/
+        /*}*/
+
+        .compile {
+            height: 100px;
+            width: 500px;
+            top: 2%;
+            left: 20%;
+        }
+    </style>
+</head>
+<body>
+
+<form action="/compile" method="post" class="compile">
+    <input name="code" style="width: 500px; height:80px; position:fixed;left:20%">
+    <input type="submit" style="position:fixed;left: 55%;height: 86px">
+</form>
+<div>{% if answer %}
+    {{answer|safe}}
+    {% endif %}
+</div>
+<div>
+    {% if error %}
+    {{error|safe}}
+    {% endif %}
+</div>
+{{tree|safe}}
+<div>
+    <table border="1">
+        <tr>
+            <th rowspan="2" class="state">state</th>
+            <th colspan="{{action_di.keys()|length}}" class="action">action</th>
+            <th colspan="{{goto_di.keys()|length}}" class="goto">goto</th>
+        </tr>
+        <tr>
+            {% for k in action_di.keys() %}
+            <th class="action">{{k}}</th>
+            {% endfor %}
+            {% for k in goto_di.keys() %}
+            <th class="goto">{{k}}</th>
+            {% endfor %}
+        </tr>
+
+        {% for k,v in analysis_table.items() %}
+        <tr>
+            <th class="state">{{k}}</th>
+            {% for av in v['action'] %}
+            <th class="action">{{av}}</th>
+            {% endfor %}
+            {% for gv in v['goto'] %}
+            <th class="goto">{{gv}}</th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+</body>
+</html>
