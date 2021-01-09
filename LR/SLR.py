@@ -2,8 +2,8 @@ from .product import Product
 from .project import Project
 from .util import *
 import numpy as np
-
-
+from . import *
+from .Follow import getFollow
 def build_DFA(queue):
     count = 0
     while len(queue) != 0:
@@ -21,14 +21,15 @@ def build_DFA(queue):
             ori = cur
 
 
-def getFollow(ter):
-    return {"E'": ['$'],
-            "E": ['$', '+',")"],
-            "T": ["$", "+", ")", "*"],
-            "F": ["$", "+", ")", "*"]}[ter]
+# def getFollow(ter):
+#     return {"E'": ['$'],
+#             "E": ['$', '+',")",'-'],
+#             "T": ["$", "+", ")", "*",'-','/'],
+#             "F": ["$", "+", ")", "*",'-','/']}[ter]
 
 
 def build_SLR(flag=None):
+    action_di,goto_di = get_di()
     if flag is None:
         analysis_table = {0: {"action": [5, np.nan, np.nan, 4, np.nan, np.nan], "goto": [1, 2, 3]},
                           1: {"action": [np.nan, 6, np.nan, np.nan, np.nan, "acc"], "goto": [np.nan, np.nan, np.nan]},
@@ -46,7 +47,7 @@ def build_SLR(flag=None):
     else:
         analysis_table = {}
         for state, project in enumerate(Project.projects):
-            analysis_table[state] = {"action": [np.nan for _ in range(6)], "goto": [np.nan for _ in range(3)]}
+            analysis_table[state] = {"action": [np.nan for _ in range(len(action_di))], "goto": [np.nan for _ in range(len(goto_di))]}
             action_goto_list = project.get_ele_after_dot()
             for ter in action_goto_list:
                 if re.match("[A-Z][']*", ter):
